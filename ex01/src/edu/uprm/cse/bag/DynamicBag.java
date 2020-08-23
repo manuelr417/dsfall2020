@@ -87,7 +87,7 @@ public class DynamicBag implements Bag {
 
         for (int i=0; i < this.size(); ++i){
             if (this.elements[i].equals(obj)){
-                ++result; // result++
+                ++result; // result++ is ok too - just want to increment, don't care about value
             }
         }
         return result;
@@ -100,7 +100,7 @@ public class DynamicBag implements Bag {
                 // found it!
                 this.elements[i] = this.elements[this.currentSize-1];
                 this.elements[this.currentSize-1] = null;
-                --this.currentSize; //this.currentSize--
+                --this.currentSize; //this.currentSize-- is ok too -  just want to increment, don't care about value
                 return true;
             }
         }
