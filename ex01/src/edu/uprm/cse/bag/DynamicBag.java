@@ -118,7 +118,7 @@ public class DynamicBag implements Bag {
     }
     public Object[] toArray(){
         Object[] result;
-
+        // return new independent array
         result = new Object[this.size()];
         for (int i=0; i < this.size(); ++i){
             result[i] = this.elements[i];
