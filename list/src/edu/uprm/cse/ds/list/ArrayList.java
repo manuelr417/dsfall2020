@@ -2,8 +2,33 @@ package edu.uprm.cse.ds.list;
 
 import java.io.PrintStream;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArrayList<E> implements List<E> {
+    public class ArrayListIterator<E> implements Iterator<E>{
+        private int currentPosition;
+
+        public ArrayListIterator(){
+            this.currentPosition = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.currentPosition < currentSize;
+        }
+
+        @Override
+        public E next() {
+            if (this.hasNext()){
+                E result = (E) elements[this.currentPosition++];
+                return result;
+
+            }
+            else {
+                throw new NoSuchElementException();
+            }
+        }
+    }
     private static final int DEFAULT_SIZE = 10;
     private E[] elements;
     private int currentSize;
@@ -32,7 +57,14 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean isMember(E e) {
-        return false;
+//        for (int i=0; i < this.size(); ++i){
+//            if (this.elements[i].equals(e)){
+//                return true;
+//            }
+//        }
+//        return false;
+        return this.firstIndex(e) >=0;
+
     }
 
     @Override
@@ -106,41 +138,81 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        return null;
+        if ((index < 0) || (index >= this.currentSize)){
+            throw new IndexOutOfBoundsException("Illegal Position");
+        }
+        E result = this.elements[index]; // el q se borra
+        for (int i=index; i < this.size() -1; ++i){  // i in range [0, currenSize-1]
+            this.elements[i] = this.elements[i + 1];
+        }
+        this.elements[this.size()-1] = null;
+        this.currentSize--;
+        return result;
     }
 
     @Override
     public boolean remove(E e) {
-        return false;
+        int targetIndex = this.firstIndex(e);
+        if (targetIndex < 0){
+            return false;
+        }
+        else {
+            this.remove(targetIndex);
+            return true;
+        }
     }
 
     @Override
     public int removeAll(E e) {
-        return 0;
+        int counter = 0;
+        while(this.remove(e)){
+            counter++;
+        }
+        return counter;
     }
 
     @Override
     public E replace(int index, E newElement) {
-        return null;
+        // valid values [0, this.currentSize-1]
+        // same as [0, this.size() -1]
+        // && both case are True
+        // || at least one is true
+
+        if ((index < 0) || (index >= this.currentSize)){
+            throw new IndexOutOfBoundsException("Illegal Position");
+        }
+        E result = this.elements[index]; // the old one
+        this.elements[index] = newElement; // put the new one
+        return result; // return old one
     }
 
     @Override
     public void clear() {
-
+        while(this.remove(0) != null){
+            // empty body
+        }
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] result  = new Object[this.size()];
+        for (int i=0; i < this.size(); ++i){
+            result[i] = this.elements[i];
+        }
+        return result;
     }
 
     @Override
     public void print(PrintStream out) {
-
+        for (int i=0; i < this.size(); ++i){
+            out.print(this.elements[i]);
+            out.print(" ");
+        }
+        out.println();
     }
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new ArrayListIterator<>();
     }
 }
