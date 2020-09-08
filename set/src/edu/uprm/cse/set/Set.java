@@ -1,5 +1,7 @@
 package edu.uprm.cse.set;
 
+import java.io.PrintStream;
+
 // Set<String> S = new DynamicSet<String>();
 // S.add("Manuel");
 // S.add(100); // Run time exceptioon
@@ -26,4 +28,7 @@ public interface Set<E> {
     public boolean isSubset(Set<E> S2);
 
     public Object[] toArray();
+
+    public void print(PrintStream out);
+
 }
