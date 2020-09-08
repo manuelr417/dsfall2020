@@ -30,6 +30,11 @@ public class TestBag {
         System.out.println("B.count(Ned)" + B.count("Ned"));
         printBag(B);
 
+        System.out.println("B.count(100)");
+
+        B.add(100);
+        printBag(B);
+
 
     }
 
