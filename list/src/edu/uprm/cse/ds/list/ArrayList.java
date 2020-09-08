@@ -188,8 +188,9 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void clear() {
-        while(this.remove(0) != null){
+        while(!this.isEmpty()){
             // empty body
+            this.remove(0) ;
         }
     }
 
@@ -214,5 +215,14 @@ public class ArrayList<E> implements List<E> {
     @Override
     public Iterator<E> iterator() {
         return new ArrayListIterator<>();
+    }
+
+    public E set(int index, E newElement){
+        if ((index < 0) || (index >= this.size())){
+            throw new IndexOutOfBoundsException("index is out of range.");
+        }
+        E result = this.elements[index];
+        this.elements[index] = newElement;
+        return result;
     }
 }
