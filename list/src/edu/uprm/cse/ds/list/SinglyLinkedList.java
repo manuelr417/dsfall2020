@@ -98,17 +98,78 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void add(E e) {
+        // Append - add at the end of the list
+        if (this.isEmpty()){
+            Node<E> newNode = new Node<>(); // new node to add
+            newNode.setElement(e);
+            // connect to the list
+            this.header.setNext(newNode);
+            this.currentSize++;
+        }
+        else {
+            // Cool
+            //for (Node<E> temp = header.getNext(); temp.getNext() != null; temp = temp.getNext());
+
+            // Other alternative
+            Node<E> temp = header.getNext();
+            while (temp.getNext() != null){
+                temp = temp.getNext();
+            }
+            // temp is a reference to the last node in the list
+            Node<E> newNode = new Node<>();
+            newNode.setElement(e);
+            temp.setNext(newNode);
+            this.currentSize++;
+        }
 
     }
 
     @Override
     public void add(E e, int index) {
-
+        if ((index < 0) || (index > this.size())){
+            throw new IndexOutOfBoundsException("index is out range.");
+        }
+        else if (index == this.size()){
+            this.add(e);
+        }
+        else {
+            // what is index == 0
+            Node<E> temp = null; // temp is the node before index
+            if (index == 0){
+                temp = this.header;
+            }
+            else {
+                temp = this.getPosition(index - 1);
+            }
+            Node<E> newNode = new Node<>();
+            newNode.setElement(e);
+            // insertion
+            newNode.setNext(temp.getNext());
+            temp.setNext(newNode);
+            this.currentSize++;
+        }
     }
 
+    private Node<E> getPosition(int index){
+        // assume that index is valid
+        int currentPosition = 0;
+        Node<E> temp = null;
+
+        temp = header.getNext();
+        while (currentPosition < index){
+            temp = temp.getNext();
+            currentPosition++;
+        }
+        // temp points to the node at position index
+        return temp; // return reference to the Node
+    }
     @Override
     public E get(int index) {
-        return null;
+        if ((index < 0) || (index >= this.size())){
+            throw new IndexOutOfBoundsException("index is out range.");
+        }
+        Node<E> target = this.getPosition(index);
+        return target.getElement();
     }
 
     @Override
@@ -128,12 +189,20 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E replace(int index, E newElement) {
-        return null;
+        if ((index < 0) || (index >= this.size())){
+            throw new IndexOutOfBoundsException("index is out range.");
+        }
+        Node<E> target = this.getPosition(index);
+        E result = target.getElement();
+        target.setElement(newElement);
+        return result;
     }
 
     @Override
     public void clear() {
-
+        while(!this.isEmpty()){
+            this.remove(0);
+        }
     }
 
     @Override
