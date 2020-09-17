@@ -2,8 +2,33 @@ package edu.uprm.cse.ds.list;
 
 import java.io.PrintStream;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class SinglyLinkedList<E> implements List<E> {
+    private class SinglyLinkedListIterator<E> implements Iterator<E>{
+        private Node<E> nextNode;
+
+        public SinglyLinkedListIterator() {
+            this.nextNode = (Node<E>) header.getNext();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.nextNode != null;
+        }
+
+        @Override
+        public E next() {
+            if (this.hasNext()){
+                E result = this.nextNode.getElement();
+                this.nextNode = this.nextNode.getNext();
+                return result;
+            }
+            else {
+                throw new NoSuchElementException();
+            }
+        }
+    }
 
     private static class Node<E> {
         private E element; // reference to value stored in the Node
@@ -174,17 +199,86 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        return null;
+        if ((index < 0) || (index >= this.size()) ){
+            throw new IndexOutOfBoundsException("index is out of bounds");
+        }
+        else {
+            Node<E> temp = null;
+            Node<E> target = null;
+            E result = null;
+            // case 1 - is index 0
+            if (index == 0){
+                temp = this.header;
+
+            }
+            else { // case 2 - index >= 1 (in the middle)
+                temp = this.getPosition(index -1 );
+            }
+            target = temp.getNext();
+            // move pointer
+            temp.setNext(target.getNext());
+            target.setNext(null);
+            // grabar el valor guardado
+            result = target.getElement();
+            target.setElement(null);
+            this.currentSize--;
+            return result;
+        }
     }
 
     @Override
     public boolean remove(E e) {
-        return false;
+        // option
+        // if (this.firstIndex(e) < 0){
+        //     return false;
+        // }
+        // else {
+        //     this.remove(this.firstIndex(e));
+        //     return true;
+        //
+        if (this.isEmpty()){
+            return false;
+        }
+
+        int targetPosition = this.firstIndex(e);
+        if (targetPosition < 0){
+            return false;
+        }
+        else {
+            Node<E> temp = null; // node just before target
+            Node<E> target = null; // node to be deleted
+            if (targetPosition == 0){
+                // borrar el primero
+                temp = this.header;
+                target = temp.getNext();
+                // move of pointers
+                temp.setNext(target.getNext());
+                target.setNext(null);
+                target.setElement(null);
+                this.currentSize--;
+                return true;
+            }
+            else {
+                temp = this.getPosition(targetPosition-1); // node just before
+                target = temp.getNext();
+                // move pointer
+                temp.setNext(target.getNext());
+                target.setNext(null);
+                target.setElement(null);
+                this.currentSize--;
+                return true;
+            }
+        }
+
     }
 
     @Override
     public int removeAll(E e) {
-        return 0;
+        int counter = 0;
+        while(this.remove(e)){
+            counter++;
+        }
+        return counter;
     }
 
     @Override
@@ -207,16 +301,25 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] result = new Object[this.size()];
+        int i =0;
+        for (Object e : this){
+            result[i++] = e;
+        }
+        return result;
     }
 
     @Override
     public void print(PrintStream out) {
+        for (Object e : this){
+            out.print(e + " ");
+        }
+        out.println();
 
     }
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new SinglyLinkedListIterator<>();
     }
 }
