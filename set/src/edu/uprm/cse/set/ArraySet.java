@@ -1,6 +1,7 @@
 package edu.uprm.cse.set;
 
-import com.sun.corba.se.spi.presentation.rmi.DynamicMethodMarshaller;
+
+import java.io.PrintStream;
 
 // Set<Integer> S = new ArraySet<Integer>();
 public class ArraySet<E> implements Set<E> {
@@ -119,33 +120,82 @@ public class ArraySet<E> implements Set<E> {
         //E[] temp2 = ((ArraySet<E>)S2).elements;
 
         E[] temp = (E[]) S2.toArray();
-        for (int i=0; i < S2.size(); ++i){
-            result.add(temp[i]);
-            //result.add(((ArraySet<E>)S2).elements[i]);
-            ///result.add((E) S2.toArray()[i]);
+        if (temp !=null) {
+            for (int i = 0; i < S2.size(); ++i) {
+                result.add(temp[i]);
+                //result.add(((ArraySet<E>)S2).elements[i]);
+                ///result.add((E) S2.toArray()[i]);
 
+            }
         }
-
         return result; // S3
     }
 
     @Override
     public Set<E> difference(Set<E> S2) {
-        return null;
+        Set<E> result = new ArraySet<E>();
+
+        for (int i =0; i < this.size(); ++i){
+            if (!S2.isMember(this.elements[i])){
+                result.add(this.elements[i]);
+            }
+        }
+        return result;
     }
 
     @Override
     public Set<E> intersection(Set<E> S2) {
-        return null;
+//        Set<E> result = new ArraySet<E>();
+//        for (int i =0; i < this.size(); ++i){
+//            if (S2.isMember(this.elements[i])){
+//                result.add(this.elements[i]);
+//            }
+//        }
+//        return result; //Fo! too 4010/4015
+
+        // in one line??
+
+        return this.difference(this.difference(S2));
     }
 
     @Override
     public boolean isSubset(Set<E> S2) {
-        return false;
+
+        // S1 = this
+        // S2 = S2
+        // If S1 is subset of S2
+//        for (int i=0; i < this.size(); ++i){
+//            if (!S2.isMember(this.elements[i])){
+//                return false;
+//            }
+//        }
+//        return true; // Not cool
+
+        return this.difference(S2).isEmpty();
+        //return this.difference(S2).size() == 0;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        if (this.size() == 0){
+            return null;
+        }
+        else {
+            Object[] result = new Object[this.size()];
+            for (int i = 0; i < this.size(); ++i){
+                result[i] = this.elements[i];
+            }
+            return result;
+        }
+    }
+
+    @Override
+    public void print(PrintStream out) {
+        //for (E e: this.elements){
+        for (int i=0 ; i < this.size(); ++i){
+            out.print(this.elements[i]);
+            out.print(" ");
+        }
+        out.println();
     }
 }
