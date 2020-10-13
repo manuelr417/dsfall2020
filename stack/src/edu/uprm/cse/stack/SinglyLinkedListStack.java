@@ -77,7 +77,11 @@ public class SinglyLinkedListStack<E> implements Stack<E> {
 
     @Override
     public void push(E e) {
-
+        Node<E> newNode = new Node<>(); // O(1)
+        newNode.setElement(e); //O(1)
+        newNode.setNext(this.header.getNext()); // O(1)
+        this.header.setNext(newNode); // O(1)
+        this.currentSize++; // O(1)
     }
 
     @Override
@@ -87,6 +91,8 @@ public class SinglyLinkedListStack<E> implements Stack<E> {
 
     @Override
     public void print(PrintStream P) {
-
+        for (Node<E> temp= this.header.getNext(); temp != null; temp = temp.getNext()){
+            P.println(temp.getElement());
+        }
     }
 }
