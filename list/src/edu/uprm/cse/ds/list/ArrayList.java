@@ -133,7 +133,7 @@ public class ArrayList<E> implements List<E> {
         if ((index < 0) || (index >= this.currentSize)){
             throw new IndexOutOfBoundsException("Illegal Position");
         }
-        return this.elements[index];
+        return this.elements[index];// O(1)
     }
 
     @Override
