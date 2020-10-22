@@ -38,22 +38,27 @@ public class DoublyLinkedQueueTest {
     public void enqueue() {
         int oldSize = this.Q.size();
         this.Q.enqueue("Xi");
-        assertEquals("size is not incremented.", this.Q.size(), oldSize );
+        assertEquals("size is not incremented.", this.Q.size(), oldSize+1 );
 
     }
 
     @Test
     public void dequeue() {
-        this.Q.enqueue("Xi");
-        assertEquals("Xi is not at the front.", this.Q.front(), "Xi" );
+        String front = this.Q.front();
+        assertEquals("Fails to detect element at the front.", front, this.Q.dequeue());
 
     }
 
     @Test
     public void clear() {
+        assertTrue("Fails to detect non zero queue", this.Q.size() != 0);
+        this.Q.clear();
+        assertTrue("Fails to detect  zero queue", this.Q.size() == 0);
+
     }
 
     @Test
     public void print() {
+        this.Q.print(System.out);
     }
 }
