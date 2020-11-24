@@ -1,6 +1,7 @@
 package edu.uprm.cse.ds.bst;
 
 import edu.uprm.cse.ds.list.List;
+import edu.uprm.cse.ds.list.SinglyLinkedList;
 import edu.uprm.cse.ds.map.Map;
 
 import java.util.Comparator;
@@ -61,12 +62,12 @@ public class BinarySearchTree<K,V> implements Map<K,V> {
 
     private V getAux(K key, BinaryTreeNode<MapEntry<K,V>> N) {
         if (N == null){
-            return null;
+            return null; // base 1
         }
         else {
             int comparison = this.keyComparator.compare(key, N.getValue().getKey());
             if (comparison == 0 ){ // are equal
-                return N.getValue().getValue();
+                return N.getValue().getValue(); // base case 2
             }
             else if (comparison < 0){ //key < Node.key
                 return this.getAux(key, N.getLeftChild());
@@ -79,7 +80,49 @@ public class BinarySearchTree<K,V> implements Map<K,V> {
 
     @Override
     public V put(K key, V value) {
-        return null;
+        if (this.size() ==0){
+            MapEntry<K,V>  M = new MapEntry<>(key, value);
+            this.root = new BinaryTreeNodeImp<>(M, null,null, null);
+            this.currentSize++;
+            return null;
+        }
+        else {
+            return this.putAux(key, value, this.root);
+        }
+    }
+
+    private V putAux(K key, V value, BinaryTreeNode<MapEntry<K,V>> N) {
+        int comparison = this.keyComparator.compare(key, N.getValue().getKey());
+        if (comparison < 0 ){
+            // voy pa' la izq
+            if (N.getLeftChild() == null){
+                // insert new node, base case 1
+                MapEntry<K,V>  M = new MapEntry<>(key, value);
+                BinaryTreeNodeImp<MapEntry<K,V>> newNode =
+                        new BinaryTreeNodeImp<>(M, N, null,null);
+                N.setLeftChild(newNode);
+                this.currentSize++;
+                return null;
+            }
+            else {
+                return this.putAux(key, value, N.getLeftChild()); // recursion on the left
+            }
+        }
+        else {
+            // voy pa' la der
+            if (N.getRightChild() == null){
+                // insert new node. base case 2
+                MapEntry<K,V>  M = new MapEntry<>(key, value);
+                BinaryTreeNodeImp<MapEntry<K,V>> newNode =
+                        new BinaryTreeNodeImp<>(M, N, null,null);
+                N.setRightChild(newNode);
+                this.currentSize++;
+                return null;
+            }
+            else {
+                return this.putAux(key,value, N.getRightChild());
+            }
+        }
     }
 
     @Override
@@ -89,21 +132,47 @@ public class BinarySearchTree<K,V> implements Map<K,V> {
 
     @Override
     public boolean contains(K key) {
-        return false;
+        return this.get(key) != null;
     }
 
     @Override
     public void clear() {
-
+        while(this.size() != 0){
+            this.remove(this.root.getValue().getKey());
+        }
     }
 
     @Override
     public List<K> getKeys() {
-        return null;
+        List<K> L = new SinglyLinkedList<>();
+        if (this.size() == 0){
+            return L;
+        }
+        else {
+            this.getKeysAux(this.root, L);
+            return L;
+        }
+    }
+
+    private void getKeysAux(BinaryTreeNode<MapEntry<K,V>> N, List<K> L) {
+        if (N == null){
+            return;
+        }
+        else if (N.getLeftChild() == null && N.getRightChild() == null){
+            L.add(N.getValue().getKey());
+            return;
+        }
+        else {
+            this.getKeysAux(N.getLeftChild(), L);
+            L.add(N.getValue().getKey());
+            this.getKeysAux(N.getRightChild(), L);
+            return;
+        }
     }
 
     @Override
     public List<V> getValues() {
         return null;
     }
+
 }
